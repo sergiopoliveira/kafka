@@ -18,19 +18,21 @@ public class ProducerDemo {
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         // create the producer
-        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(properties)) {
 
-        // create a producer record
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>("first_topic", "Hello World");
+            // create a producer record
+            ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "Hello World");
 
-        // send data - asynchronous
-        producer.send(record);
+            // send data - asynchronous
+            producer.send(record);
+        }
 
-        // flush data
-        producer.flush();
-
-        // flush and close data
-        producer.close();
+        // not required below, using try-with-resources instead
+//        // flush data
+//        producer.flush();
+//
+//        // flush and close data
+//        producer.close();
 
     }
 }
